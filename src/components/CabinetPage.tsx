@@ -38,15 +38,15 @@ export default function CabinetPage({ currentUser, onLoginRequest, onLogout }: C
   return (
     <div className="min-h-screen bg-background">
       <div className="border-b border-border bg-card/50">
-        <div className="max-w-3xl mx-auto px-6 py-8">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
           <p className="text-xs font-body uppercase tracking-widest text-gold mb-2">Профиль</p>
-          <h1 className="font-display text-4xl font-bold uppercase tracking-wider text-foreground">
+          <h1 className="font-display text-3xl sm:text-4xl font-bold uppercase tracking-wider text-foreground">
             Личный кабинет
           </h1>
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-6 py-8 space-y-6">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-4 sm:space-y-6">
         <div className="bg-card border border-border p-6">
           <div className="flex items-center gap-4 mb-6">
             <div className="w-14 h-14 rounded-full bg-gold flex items-center justify-center">
@@ -85,23 +85,32 @@ export default function CabinetPage({ currentUser, onLoginRequest, onLogout }: C
             </div>
           ) : (
             <div className="space-y-3">
-              {currentUser.purchases.includes("horse_stories") && (
-                <div className="flex items-center gap-3 p-4 border border-border">
-                  <div className="w-8 h-8 bg-gold/20 flex items-center justify-center">
-                    <Icon name="BookOpen" size={14} className="text-gold" />
+              {[
+                { id: "horse_stories", label: "История Лошади — 1–5", sub: "5 частей · 5 ₽", emoji: "🐴" },
+                { id: "horse_6_1", label: "Лошадь 6 (Часть 1)", sub: "5 ₽", emoji: "🐴" },
+                { id: "horse_6_2", label: "Лошадь 6 (Часть 2)", sub: "5 ₽", emoji: "🐴" },
+                { id: "horse_6_3", label: "Лошадь 6 (Часть 3)", sub: "5 ₽", emoji: "🐴" },
+                { id: "misha_6", label: "История Миши 6", sub: "Финал · 5 ₽", emoji: "🐻" },
+                { id: "secret_cat", label: "Секретная история про кота", sub: "Задание · бесплатно", emoji: "🐱" },
+              ]
+                .filter(p => currentUser.purchases.includes(p.id))
+                .map(p => (
+                  <div key={p.id} className="flex items-center gap-3 p-3 sm:p-4 border border-border">
+                    <div className="w-8 h-8 bg-gold/20 flex items-center justify-center flex-shrink-0 text-base">
+                      {p.emoji}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-display text-xs sm:text-sm font-semibold uppercase tracking-wide text-foreground truncate">
+                        {p.label}
+                      </p>
+                      <p className="font-body text-xs text-muted-foreground">{p.sub}</p>
+                    </div>
+                    <div className="flex items-center gap-1 text-green-400 text-xs font-body flex-shrink-0">
+                      <Icon name="CheckCircle" size={12} />
+                      <span className="hidden sm:block">Активно</span>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="font-display text-sm font-semibold uppercase tracking-wide text-foreground">
-                      История Лошади — Полная коллекция
-                    </p>
-                    <p className="font-body text-xs text-muted-foreground">8 частей · 5 ₽</p>
-                  </div>
-                  <div className="flex items-center gap-1 text-green-400 text-xs font-body">
-                    <Icon name="CheckCircle" size={12} />
-                    Активно
-                  </div>
-                </div>
-              )}
+                ))}
             </div>
           )}
         </div>

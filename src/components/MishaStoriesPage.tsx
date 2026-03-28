@@ -41,9 +41,9 @@ export default function MishaStoriesPage({ currentUser, onUserUpdate, onLoginReq
   return (
     <div className="min-h-screen bg-background">
       <div className="border-b border-border bg-card/50">
-        <div className="max-w-5xl mx-auto px-6 py-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
           <p className="text-xs font-body uppercase tracking-widest text-gold mb-2">Коллекция историй</p>
-          <h1 className="font-display text-4xl md:text-5xl font-bold uppercase tracking-wider text-foreground">
+          <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-wider text-foreground">
             История Миши
           </h1>
           <p className="font-body text-muted-foreground mt-2 text-sm">
@@ -52,35 +52,35 @@ export default function MishaStoriesPage({ currentUser, onUserUpdate, onLoginReq
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 py-8">
-        <div className="flex gap-6 flex-col md:flex-row">
-          <div className="w-full md:w-56 flex-shrink-0">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <div className="flex gap-4 sm:gap-6 flex-col md:flex-row">
+          <div className="w-full md:w-52 flex-shrink-0">
             <p className="text-xs font-body uppercase tracking-widest text-muted-foreground mb-3">Части</p>
-            <div className="space-y-1">
+            <div className="flex md:flex-col gap-1 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0">
               {mishaStories.map((story, i) => {
                 const locked = i === 5 && !isMisha6Unlocked;
                 return (
                   <button
                     key={story.id}
                     onClick={() => setActiveTab(i)}
-                    className={`w-full text-left px-4 py-3 flex items-start gap-3 transition-all duration-200 border-l-2 ${
+                    className={`flex-shrink-0 md:w-full text-left px-3 sm:px-4 py-2.5 flex items-center gap-2 transition-all duration-200 border-b-2 md:border-b-0 md:border-l-2 ${
                       activeTab === i
-                        ? "border-l-gold bg-muted text-foreground"
-                        : "border-l-transparent hover:border-l-border hover:bg-muted/50 text-muted-foreground"
+                        ? "border-gold bg-muted text-foreground"
+                        : "border-transparent hover:border-border hover:bg-muted/50 text-muted-foreground"
                     }`}
                   >
-                    <span className="font-display text-xs mt-0.5 w-4 flex-shrink-0">
+                    <span className="font-display text-xs w-4 flex-shrink-0">
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <div className="flex-1 min-w-0">
-                      <div className={`font-display text-xs font-semibold uppercase tracking-wide leading-tight ${activeTab === i ? "text-gold" : ""}`}>
+                    <div className="hidden sm:block flex-1 min-w-0">
+                      <div className={`font-display text-xs font-semibold uppercase tracking-wide leading-tight truncate ${activeTab === i ? "text-gold" : ""}`}>
                         {story.title}
                       </div>
                       {story.subtitle && (
-                        <div className="text-xs font-body text-muted-foreground mt-0.5">{story.subtitle}</div>
+                        <div className="text-xs font-body text-muted-foreground mt-0.5 truncate">{story.subtitle}</div>
                       )}
                     </div>
-                    {locked && <Icon name="Lock" size={11} className="text-muted-foreground flex-shrink-0 mt-0.5" />}
+                    {locked && <Icon name="Lock" size={10} className="text-muted-foreground flex-shrink-0 ml-auto" />}
                   </button>
                 );
               })}

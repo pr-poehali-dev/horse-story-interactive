@@ -149,3 +149,62 @@ export function toggleReaction(storyId: string, userId: string, emoji: ReactionE
   localStorage.setItem(`reactions_${storyId}`, JSON.stringify(data));
   return data;
 }
+
+// ─── Quests ───────────────────────────────────────────────────────────────────
+
+export interface QuestProgress {
+  minutesSpent: number;
+  sessionStart: number | null;
+  claimed5: boolean;
+  claimed10: boolean;
+  claimed15: boolean;
+}
+
+const QUEST_KEY = "quest_progress";
+
+export function getQuestProgress(): QuestProgress {
+  try {
+    const raw = localStorage.getItem(QUEST_KEY);
+    return raw
+      ? JSON.parse(raw)
+      : { minutesSpent: 0, sessionStart: null, claimed5: false, claimed10: false, claimed15: false };
+  } catch {
+    return { minutesSpent: 0, sessionStart: null, claimed5: false, claimed10: false, claimed15: false };
+  }
+}
+
+export function saveQuestProgress(p: QuestProgress) {
+  localStorage.setItem(QUEST_KEY, JSON.stringify(p));
+}
+
+export function claimQuest(
+  userId: string,
+  quest: "5" | "10" | "15"
+): { success: boolean; error?: string; secretUnlocked?: boolean } {
+  const users = getStoredUsers();
+  const user = Object.values(users).find(u => u.id === userId);
+  if (!user) return { success: false, error: "Пользователь не найден" };
+
+  const progress = getQuestProgress();
+  const claimKey = `claimed${quest}` as keyof QuestProgress;
+  if (progress[claimKey]) return { success: false, error: "Задание уже выполнено" };
+
+  const minutes = parseInt(quest);
+  if (progress.minutesSpent < minutes) {
+    return { success: false, error: `Нужно провести ещё ${minutes - progress.minutesSpent} мин на сайте` };
+  }
+
+  user.balance += 5;
+  const secretUnlocked = quest === "15";
+  if (secretUnlocked && !user.purchases.includes("secret_cat")) {
+    user.purchases.push("secret_cat");
+  }
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+
+  (progress[claimKey] as boolean) = true;
+  saveQuestProgress(progress);
+
+  const { password: _, ...sessionUser } = user;
+  setSession(sessionUser);
+  return { success: true, secretUnlocked };
+}
