@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 import { addComment, getComments, type Comment, type User } from "@/store/authStore";
+import ReactionsBar from "@/components/ReactionsBar";
 
 interface CommentsSectionProps {
   storyId: string;
@@ -26,7 +27,9 @@ export default function CommentsSection({ storyId, currentUser, onLoginRequest }
   };
 
   return (
-    <div className="mt-8 border-t border-border pt-6">
+    <div className="mt-6">
+      <ReactionsBar storyId={storyId} currentUser={currentUser} onLoginRequest={onLoginRequest} />
+      <div className="mt-6 border-t border-border pt-6">
       <button
         onClick={() => setVisible(!visible)}
         className="flex items-center gap-2 text-sm font-body uppercase tracking-widest text-muted-foreground hover:text-gold transition-colors mb-4"
@@ -100,6 +103,7 @@ export default function CommentsSection({ storyId, currentUser, onLoginRequest }
           )}
         </div>
       )}
+      </div>
     </div>
   );
 }

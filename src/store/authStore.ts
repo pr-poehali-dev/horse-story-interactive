@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+// authStore
 
 export interface User {
   id: string;
@@ -119,4 +119,33 @@ export function getComments(storyId: string): Comment[] {
   } catch {
     return [];
   }
+}
+
+export type ReactionEmoji = "🔥" | "😂" | "😢" | "👍" | "❤️" | "😱";
+
+export const REACTIONS: ReactionEmoji[] = ["🔥", "😂", "😢", "👍", "❤️", "😱"];
+
+export interface ReactionData {
+  [emoji: string]: string[];
+}
+
+export function getReactions(storyId: string): ReactionData {
+  try {
+    return JSON.parse(localStorage.getItem(`reactions_${storyId}`) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+export function toggleReaction(storyId: string, userId: string, emoji: ReactionEmoji): ReactionData {
+  const data = getReactions(storyId);
+  if (!data[emoji]) data[emoji] = [];
+  const idx = data[emoji].indexOf(userId);
+  if (idx === -1) {
+    data[emoji].push(userId);
+  } else {
+    data[emoji].splice(idx, 1);
+  }
+  localStorage.setItem(`reactions_${storyId}`, JSON.stringify(data));
+  return data;
 }

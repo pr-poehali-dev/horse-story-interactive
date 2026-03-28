@@ -116,6 +116,7 @@ export default function Index() {
         {page === "misha" && (
           <MishaStoriesPage
             currentUser={currentUser}
+            onUserUpdate={handleUserUpdate}
             onLoginRequest={() => setShowAuth(true)}
           />
         )}
